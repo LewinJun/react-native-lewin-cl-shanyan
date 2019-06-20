@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import CLShanYanSDK from 'react-native-lewin-cl-shanyan'
 
 const instructions = Platform.select({
@@ -25,14 +25,26 @@ export default class App extends Component<Props> {
     console.log(res);
   };
 
+  async preGetPhonenumber() {
+    const res = await CLShanYanSDK.preGetPhonenumber();
+    console.log(res);
+  };
+
   componentDidMount() {
     this.initAppId();
+  }
+
+  async quickLogin() {
+    const res = await CLShanYanSDK.quickAuthLogin({ logo: require('./images/test.png') });
+    console.log(res);
   }
 
   render() {
     return (
       <View style={styles.container}>
         <Text onPress={this.initAppId}>初始化</Text>
+        <Text onPress={this.preGetPhonenumber}>预取号</Text>
+        <Text onPress={this.quickLogin}>登录</Text>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>

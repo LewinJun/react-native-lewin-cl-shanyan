@@ -1,7 +1,7 @@
 
 'use strict'
 
-const { NativeModules, NativeEventEmitter, DeviceEventEmitter, Platform } = require('react-native');
+const { NativeModules, Image, Platform } = require('react-native');
 
 
 type CALL_BBACK_PROPS = {
@@ -10,12 +10,14 @@ type CALL_BBACK_PROPS = {
   base64: string, // 图片base64 png
 }
 
+let RNCLShanYanSDK = undefined;
+
 /**
  * 创蓝 闪验RN SDK
  */
 export default class RNCLShanYanSDKUtil  {
 
-  static RNCLShanYanSDK = undefined;
+  
 
   /**
    * @param appId 闪验appID
@@ -52,5 +54,25 @@ export default class RNCLShanYanSDKUtil  {
     return RNCLShanYanSDK.preGetPhonenumber();
   }
 
+  static quickAuthLogin({logo}) {
+    return RNCLShanYanSDK.quickAuthLogin({ logo: resolveImageAsset(logo) });
+  }
+
  
+}
+
+/**
+ * resolve 图片资源
+ * @param {String | Number} asset
+ */
+export const resolveImageAsset = asset => {
+  switch (typeof asset) {
+    case 'number':
+      const result = Image.resolveAssetSource(asset)
+      if (result && result.__packager_asset) return result.uri
+      break
+    case 'string':
+      return asset
+  }
+  return null
 }
