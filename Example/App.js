@@ -21,8 +21,14 @@ type Props = {};
 export default class App extends Component<Props> {
 
   async initAppId() {
-    const res = await CLShanYanSDK.initWithAppId({appId: "", appKey: "", timeOut: 2});
-    console.log(res);
+    try{
+      const res = await CLShanYanSDK.initWithAppId({appId: "", appKey: "", timeOut: 2});
+      console.log(res);
+    }catch(e){
+      console.log(e);
+    }
+    
+    
   };
 
   async preGetPhonenumber() {

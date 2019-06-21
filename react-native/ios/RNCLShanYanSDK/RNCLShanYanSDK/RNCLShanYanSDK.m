@@ -97,6 +97,7 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
     });
 }
 
+#pragma mark - UI配置闪验
 -(CLUIConfigure*)getConfig:(NSDictionary*)configure {
     CLUIConfigure * baseUIConfigure = [CLUIConfigure new];
     // LOGO 相关属性
@@ -202,6 +203,64 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
     
     
     return baseUIConfigure;
+}
+
+#pragma -mark 获取当前的ViewController
+/**
+ * @brief 获取当前的ViewController
+ *
+ */
++(UIViewController*_Nonnull)getCurrentViewController{
+    return [[[self class] getCurrentNavigationController] visibleViewController];
+}
+
++ (UINavigationController *)__expectedVisibleNavigationController
+{
+    UINavigationController *nvc = [[self class] expectedVisibleNavigationController];
+    if ([nvc isKindOfClass:[UINavigationController class]])
+    {
+        return nvc;
+    }
+    else
+    {
+        UIViewController *vc = [self __visibleViewControllerWithRootViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+        UINavigationController *nvc = (UINavigationController *)([vc isKindOfClass:[UINavigationController class]] ? vc : vc.navigationController);
+        return nvc;
+    }
+}
+
++ (UIViewController *)__visibleViewController
+{
+    UIViewController *vc = [self __visibleViewControllerWithRootViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
+    return vc;
+}
+
++ (UIViewController*)__visibleViewControllerWithRootViewController:(UIViewController*)rootViewController
+{
+    if ([rootViewController isKindOfClass:[UITabBarController class]])
+    {
+        UITabBarController *tbc = (UITabBarController*)rootViewController;
+        return [self __visibleViewControllerWithRootViewController:tbc.selectedViewController];
+    }
+    else if ([rootViewController isKindOfClass:[UINavigationController class]])
+    {
+        UINavigationController *nvc = (UINavigationController*)rootViewController;
+        return [self __visibleViewControllerWithRootViewController:nvc.visibleViewController];
+    }
+    else if (rootViewController.presentedViewController)
+    {
+        UIViewController *presentedVC = rootViewController.presentedViewController;
+        return [self __visibleViewControllerWithRootViewController:presentedVC];
+    }
+    else
+    {
+        return rootViewController;
+    }
+}
+
++ (UINavigationController *)expectedVisibleNavigationController
+{
+    return (UINavigationController *)@"miss";
 }
 
 @end
