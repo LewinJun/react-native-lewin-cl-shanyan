@@ -97,9 +97,35 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
     });
 }
 
+RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        @try{
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIViewController *vc = [[self class] getCurrentViewController];
+                [vc dismissViewControllerAnimated:YES completion:nil];
+                NSMutableDictionary *dict = [NSMutableDictionary new];
+                [dict setObject:@(1000) forKey:@"code"];
+                [dict setObject:@"成功" forKey:@"message"];
+                [dict setObject:@"" forKey:@"data"];
+                success(dict);
+            });
+        }@catch(NSException *ex){
+            NSString *domain = @"lewin.error";
+            NSString *desc = NSLocalizedString(@"初始化失败", @"");
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : desc };
+            NSError *error = [NSError errorWithDomain:domain
+                                                 code:500
+                                             userInfo:userInfo];
+            failure(error);
+        }
+    });
+}
+
 #pragma mark - UI配置闪验
 -(CLUIConfigure*)getConfig:(NSDictionary*)configure {
     CLUIConfigure * baseUIConfigure = [CLUIConfigure new];
+    baseUIConfigure.viewController = [RNCLShanYanSDK getCurrentViewController];
     // LOGO 相关属性
     if (configure[@"logo"]) {
         [baseUIConfigure setClLogoImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:configure[@"logo"]]]];
@@ -128,7 +154,7 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
         [baseUIConfigure setCl_navigation_backgroundImage:configure[@"navBarBG"]];
     }
     if (configure[@"navBarTintColor"]) {
-        [baseUIConfigure setCl_navigation_tintColor: COLOR_HEX(configure[@"navBarTintColor"], 1.0)];
+        [baseUIConfigure setCl_navigation_tintColor:[self colorWithHexString:configure[@"navBarTintColor"] alpha:1]];
     }
     if (configure[@"navBarBackBtnHidden"]) {
         [baseUIConfigure setCl_navigation_backBtnHidden: configure[@"navBarBackBtnHidden"]];
@@ -146,10 +172,10 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
     // .... 其他待提出
     // 手机号码
     if (configure[@"phoneFontSize"]) {
-        [baseUIConfigure setClPhoneNumberFont:[UIFont systemFontOfSize:configure[@"phoneFontSize"]]];
+        [baseUIConfigure setClPhoneNumberFont:[UIFont systemFontOfSize:[configure[@"phoneFontSize"] floatValue]]];
     }
     if (configure[@"phoneColor"]) {
-        [baseUIConfigure setClPhoneNumberColor:COLOR_HEX(configure[@"phoneColor"], 1)];
+        [baseUIConfigure setClPhoneNumberColor:[self colorWithHexString:configure[@"phoneColor"] alpha:1]];
     }
     if (configure[@"phoneWidth"]) {
         [baseUIConfigure setClPhoneNumberWidth:configure[@"phoneWidth"]];
@@ -169,10 +195,10 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
         [baseUIConfigure setClLoginBtnText:configure[@"loginTxt"]];
     }
     if (configure[@"loginFontSize"]) {
-        [baseUIConfigure setClLoginBtnTextFont:[UIFont systemFontOfSize:configure[@"loginFontSize"]]];
+        [baseUIConfigure setClLoginBtnTextFont:[UIFont systemFontOfSize:[configure[@"loginFontSize"] floatValue]]];
     }
     if (configure[@"loginTxtColor"]) {
-        [baseUIConfigure setClLoginBtnTextColor:COLOR_HEX(configure[@"loginTxtColor"], 1)];
+        [baseUIConfigure setClLoginBtnTextColor:[self colorWithHexString:configure[@"loginTxtColor"] alpha:1]];
     }
     if (configure[@"loginTxt"]) {
         [baseUIConfigure setClLoginBtnText:configure[@"loginTxt"]];
@@ -184,10 +210,10 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
         [baseUIConfigure setClLoginBtnHeight:configure[@"loginHeight"]];
     }
     if (configure[@"loginBGColor"]) {
-        [baseUIConfigure setClLoginBtnBgColor:COLOR_HEX(configure[@"loginBGColor"], 1)];
+        [baseUIConfigure setClLoginBtnBgColor:[self colorWithHexString:configure[@"loginBGColor"] alpha:1]];
     }
     if (configure[@"loginBorderColor"]) {
-        [baseUIConfigure setClLoginBtnBorderColor:COLOR_HEX(configure[@"loginBorderColor"], 1)];
+        [baseUIConfigure setClLoginBtnBorderColor:[self colorWithHexString:configure[@"loginBorderColor"] alpha:1]];
     }
     if (configure[@"loginBorderWidth"]) {
         [baseUIConfigure setClLoginBtnBorderWidth:configure[@"loginBorderWidth"]];
@@ -205,11 +231,41 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseRes
     return baseUIConfigure;
 }
 
+- (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha {
+    hexString = [hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    hexString = [hexString stringByReplacingOccurrencesOfString:@"#" withString:@""];
+    hexString = [hexString stringByReplacingOccurrencesOfString:@"0x" withString:@""];
+    NSRegularExpression *RegEx = [NSRegularExpression regularExpressionWithPattern:@"^[a-fA-F|0-9]{6}$" options:0 error:nil];
+    NSUInteger match = [RegEx numberOfMatchesInString:hexString options:NSMatchingReportCompletion range:NSMakeRange(0, hexString.length)];
+    
+    if (match == 0) {return [UIColor clearColor];}
+    
+    NSString *rString = [hexString substringWithRange:NSMakeRange(0, 2)];
+    NSString *gString = [hexString substringWithRange:NSMakeRange(2, 2)];
+    NSString *bString = [hexString substringWithRange:NSMakeRange(4, 2)];
+    unsigned int r, g, b;
+    BOOL rValue = [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    BOOL gValue = [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    BOOL bValue = [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    if (rValue && gValue && bValue) {
+        return [UIColor colorWithRed:((float)r/255.0f) green:((float)g/255.0f) blue:((float)b/255.0f) alpha:alpha];
+    } else {
+        return [UIColor clearColor];
+    }
+}
+
 #pragma -mark 获取当前的ViewController
 /**
  * @brief 获取当前的ViewController
  *
  */
++ (UINavigationController *)getCurrentNavigationController
+{
+    UINavigationController *nvc = [[self class] __expectedVisibleNavigationController];
+    return nvc;
+}
+
 +(UIViewController*_Nonnull)getCurrentViewController{
     return [[[self class] getCurrentNavigationController] visibleViewController];
 }

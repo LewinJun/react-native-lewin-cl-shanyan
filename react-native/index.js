@@ -55,7 +55,7 @@ export default class RNCLShanYanSDKUtil  {
   }
 
   static quickAuthLogin({logo}) {
-    return RNCLShanYanSDK.quickAuthLogin({ logo: resolveImageAsset(logo) });
+    return RNCLShanYanSDK.quickAuthLogin({ logo: resolveImageAsset(logo) }, 10);
   }
 
  

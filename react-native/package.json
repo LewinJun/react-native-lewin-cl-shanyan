@@ -1,10 +1,10 @@
 {
   "name": "react-native-lewin-cl-shanyan",
   "version": "1.0.0",
-  "description": "创蓝 253 闪验SDK(v2.1.3)， 基于官网的SDK封装RN(React Native)版本",
+  "description": "创蓝 253 闪验SDK(v2.2)， 基于官网的SDK封装RN(React Native)版本",
   "main": "index.js",
   "scripts": {
-    "test": "创蓝 253 闪验SDK(v2.1.3)， 基于官网的SDK封装RN(React Native)版本",
+    "test": "创蓝 253 闪验SDK(v2.2)， 基于官网的SDK封装RN(React Native)版本",
     "prepare": "rm -rf android/build Example/android/build Example/android/app/build node_modules Example/ios/build"
   },
   "repository": {

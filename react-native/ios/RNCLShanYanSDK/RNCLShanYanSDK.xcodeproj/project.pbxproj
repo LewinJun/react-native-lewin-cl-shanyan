@@ -18,11 +18,6 @@
 		075D8FB322B8C2EF005676DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		075D8FBB22B8D0F5005676DB /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		075D8FC822B8D773005676DB /* RNCLShanYanSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCLShanYanSDK.m; sourceTree = "<group>"; };
-		075D903522B8F12D005676DB /* TYRZSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TYRZSDK.framework; sourceTree = "<group>"; };
-		075D903622B8F12D005676DB /* CL_ShanYanSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CL_ShanYanSDK.framework; sourceTree = "<group>"; };
-		075D903722B8F12D005676DB /* sdk_oauth.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = sdk_oauth.bundle; sourceTree = "<group>"; };
-		075D903822B8F12D005676DB /* OAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OAuth.framework; sourceTree = "<group>"; };
-		075D903922B8F12D005676DB /* EAccountApiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EAccountApiSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +52,6 @@
 		075D8FB122B8C2EF005676DB /* RNCLShanYanSDK */ = {
 			isa = PBXGroup;
 			children = (
-				075D903422B8F12D005676DB /* CL_ShanYanDependenceSDK */,
 				075D8FB222B8C2EF005676DB /* RNCLShanYanSDK.h */,
 				075D8FC822B8D773005676DB /* RNCLShanYanSDK.m */,
 				075D8FB322B8C2EF005676DB /* Info.plist */,
@@ -71,18 +65,6 @@
 				075D8FBB22B8D0F5005676DB /* libc++.1.tbd */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		075D903422B8F12D005676DB /* CL_ShanYanDependenceSDK */ = {
-			isa = PBXGroup;
-			children = (
-				075D903522B8F12D005676DB /* TYRZSDK.framework */,
-				075D903622B8F12D005676DB /* CL_ShanYanSDK.framework */,
-				075D903722B8F12D005676DB /* sdk_oauth.bundle */,
-				075D903822B8F12D005676DB /* OAuth.framework */,
-				075D903922B8F12D005676DB /* EAccountApiSDK.framework */,
-			);
-			path = CL_ShanYanDependenceSDK;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,7 +290,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lewin.cl.shanyan.RNCLShanYanSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -337,7 +319,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lewin.cl.shanyan.RNCLShanYanSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";

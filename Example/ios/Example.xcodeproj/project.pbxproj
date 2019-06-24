@@ -14,14 +14,14 @@
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ExampleTests.m */; };
 		05DFC9D72C9A4553805F11D0 /* RNCLShanYanSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D201D9408534506900E4BFA /* RNCLShanYanSDK.framework */; };
-		075D902F22B8EFAA005676DB /* TYRZSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075D902A22B8EFA9005676DB /* TYRZSDK.framework */; };
-		075D903022B8EFAA005676DB /* CL_ShanYanSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075D902B22B8EFA9005676DB /* CL_ShanYanSDK.framework */; };
-		075D903122B8EFAA005676DB /* sdk_oauth.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 075D902C22B8EFA9005676DB /* sdk_oauth.bundle */; };
-		075D903222B8EFAA005676DB /* OAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075D902D22B8EFA9005676DB /* OAuth.framework */; };
-		075D903322B8EFAA005676DB /* EAccountApiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075D902E22B8EFA9005676DB /* EAccountApiSDK.framework */; };
 		076FE3B822B9DF4F00241255 /* libz.1.2.8.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FE39122B9DF4F00241255 /* libz.1.2.8.tbd */; };
 		076FE3BA22B9DF5900241255 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FE3B922B9DF5900241255 /* libc++.1.tbd */; };
 		076FE3BC22B9DF6700241255 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FE3BB22B9DF6700241255 /* libresolv.tbd */; };
+		07705F2422C0790100B149F7 /* TYRZSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07705F1F22C0790100B149F7 /* TYRZSDK.framework */; };
+		07705F2522C0790100B149F7 /* CL_ShanYanSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07705F2022C0790100B149F7 /* CL_ShanYanSDK.framework */; };
+		07705F2622C0790100B149F7 /* sdk_oauth.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 07705F2122C0790100B149F7 /* sdk_oauth.bundle */; };
+		07705F2722C0790100B149F7 /* OAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07705F2222C0790100B149F7 /* OAuth.framework */; };
+		07705F2822C0790100B149F7 /* EAccountApiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07705F2322C0790100B149F7 /* EAccountApiSDK.framework */; };
 		11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -344,14 +344,14 @@
 		00E356EE1AD99517003FC87E /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleTests.m; sourceTree = "<group>"; };
-		075D902A22B8EFA9005676DB /* TYRZSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TYRZSDK.framework; sourceTree = "<group>"; };
-		075D902B22B8EFA9005676DB /* CL_ShanYanSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CL_ShanYanSDK.framework; sourceTree = "<group>"; };
-		075D902C22B8EFA9005676DB /* sdk_oauth.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = sdk_oauth.bundle; sourceTree = "<group>"; };
-		075D902D22B8EFA9005676DB /* OAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OAuth.framework; sourceTree = "<group>"; };
-		075D902E22B8EFA9005676DB /* EAccountApiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EAccountApiSDK.framework; sourceTree = "<group>"; };
 		076FE39122B9DF4F00241255 /* libz.1.2.8.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.8.tbd; path = usr/lib/libz.1.2.8.tbd; sourceTree = SDKROOT; };
 		076FE3B922B9DF5900241255 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		076FE3BB22B9DF6700241255 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		07705F1F22C0790100B149F7 /* TYRZSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TYRZSDK.framework; sourceTree = "<group>"; };
+		07705F2022C0790100B149F7 /* CL_ShanYanSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CL_ShanYanSDK.framework; sourceTree = "<group>"; };
+		07705F2122C0790100B149F7 /* sdk_oauth.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = sdk_oauth.bundle; sourceTree = "<group>"; };
+		07705F2222C0790100B149F7 /* OAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OAuth.framework; sourceTree = "<group>"; };
+		07705F2322C0790100B149F7 /* EAccountApiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EAccountApiSDK.framework; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,22 +392,22 @@
 				076FE3BA22B9DF5900241255 /* libc++.1.tbd in Frameworks */,
 				076FE3B822B9DF4F00241255 /* libz.1.2.8.tbd in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
-				075D903222B8EFAA005676DB /* OAuth.framework in Frameworks */,
-				075D903322B8EFAA005676DB /* EAccountApiSDK.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
-				075D902F22B8EFAA005676DB /* TYRZSDK.framework in Frameworks */,
-				075D903022B8EFAA005676DB /* CL_ShanYanSDK.framework in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
+				07705F2722C0790100B149F7 /* OAuth.framework in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
+				07705F2522C0790100B149F7 /* CL_ShanYanSDK.framework in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
+				07705F2822C0790100B149F7 /* EAccountApiSDK.framework in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				07705F2422C0790100B149F7 /* TYRZSDK.framework in Frameworks */,
 				05DFC9D72C9A4553805F11D0 /* RNCLShanYanSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,14 +514,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		075D902922B8EFA9005676DB /* CL_ShanYanDependenceSDK */ = {
+		07705F1E22C0790100B149F7 /* CL_ShanYanDependenceSDK */ = {
 			isa = PBXGroup;
 			children = (
-				075D902A22B8EFA9005676DB /* TYRZSDK.framework */,
-				075D902B22B8EFA9005676DB /* CL_ShanYanSDK.framework */,
-				075D902C22B8EFA9005676DB /* sdk_oauth.bundle */,
-				075D902D22B8EFA9005676DB /* OAuth.framework */,
-				075D902E22B8EFA9005676DB /* EAccountApiSDK.framework */,
+				07705F1F22C0790100B149F7 /* TYRZSDK.framework */,
+				07705F2022C0790100B149F7 /* CL_ShanYanSDK.framework */,
+				07705F2122C0790100B149F7 /* sdk_oauth.bundle */,
+				07705F2222C0790100B149F7 /* OAuth.framework */,
+				07705F2322C0790100B149F7 /* EAccountApiSDK.framework */,
 			);
 			path = CL_ShanYanDependenceSDK;
 			sourceTree = "<group>";
@@ -549,7 +549,7 @@
 		13B07FAE1A68108700A75B9A /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				075D902922B8EFA9005676DB /* CL_ShanYanDependenceSDK */,
+				07705F1E22C0790100B149F7 /* CL_ShanYanDependenceSDK */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1134,7 +1134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				075D903122B8EFAA005676DB /* sdk_oauth.bundle in Resources */,
+				07705F2622C0790100B149F7 /* sdk_oauth.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
