@@ -54,8 +54,29 @@ export default class RNCLShanYanSDKUtil  {
     return RNCLShanYanSDK.preGetPhonenumber();
   }
 
-  static quickAuthLogin({logo}) {
-    return RNCLShanYanSDK.quickAuthLogin({ logo: resolveImageAsset(logo) }, 10);
+  /**
+   * 
+   * @param {*} param0 logo 图片require  phone 电话号码  login 登录按钮  navBar 头部导航栏 otherLogin 其他方式登录
+   * appPrivacyOne/appPrivacyTwo "name,url" 组合
+   * privacyState true false 是否选中 协议勾选框 默认为true
+   * @param {*} timeOut 超时时间
+   */
+  static quickAuthLogin(params = {logo: null, logoWidth : null, logoHeight : null, 
+    logoOffX : null, logoOffY : null, logoHidden : null, 
+    phoneFontSize : null, phoneColor : null, phoneWidth : null, phoneOffX : null, 
+    phoneOffY : null, loginTxt : null, loginTxtColor : null, loginFontSize : null, loginWidth : null, 
+    loginHeight : null, loginOffX : null, loginOffY : null, navBarHidden : null, authBG : null
+    , navBarTintColor : null, navBarBackBtnImg : null, navBarBackBtnHidden : null, navBarBGTransparent : null, navBarTitle : null, 
+    otherLoginHidden : false, otherLoginTxt : null, otherLoginColor : null, otherLoginFontSize : null, otherLoginBGColor : null,
+    rightBtnHidden : false, rightBtnBG : null, rightBtnWidth : null, rightBtnHeight : null,
+    sloganTextSize : null, sloganTextColor : null, sloganHidden : null, sloganOffsetX : null, sloganOffsetY : null, sloganOffsetBottomY,
+    appPrivacyOne : null, appPrivacyTwo : null, appPrivacyColor : null, privacyOffsetBottomY : null, privacyOffsetX : null, privacyState : true, 
+    uncheckedImgPath : null, checkedImgPath : null, checkBoxHidden : null }, timeOut = 10) {
+    return RNCLShanYanSDK.quickAuthLogin(params, timeOut);
+  }
+
+  static closeLogin() {
+    return RNCLShanYanSDK.closeLogin();
   }
 
  
