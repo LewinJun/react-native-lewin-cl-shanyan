@@ -11,6 +11,12 @@
 #import <CL_ShanYanSDK/CL_ShanYanSDK.h>
 #define COLOR_HEX(hexValue,alphaValue) [UIColor colorWithRed:((float)((hexValue & 0xFF0000) >> 16))/255.0 green:((float)((hexValue & 0xFF00) >> 8))/255.0 blue:((float)(hexValue & 0xFF))/255.0 alpha:alphaValue]
 
+@interface RNCLShanYanSDK ()
+
+@property(nonatomic, assign) RCTPromiseResolveBlock successBlock;
+
+@end
+
 @implementation RNCLShanYanSDK
 RCT_EXPORT_MODULE();
 
@@ -69,6 +75,7 @@ RCT_EXPORT_METHOD(preGetPhonenumber:(RCTPromiseResolveBlock)success failure:(RCT
 }
 
 RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
+    self.successBlock = success;
     dispatch_sync(dispatch_get_main_queue(), ^{
         @try{
             CLUIConfigure * baseUIConfigure = [self getConfig:configure];
@@ -128,7 +135,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     baseUIConfigure.viewController = [RNCLShanYanSDK getCurrentViewController];
     // LOGO 相关属性
     if (configure[@"logo"]) {
-        [baseUIConfigure setClLogoImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:configure[@"logo"]]]];
+        [baseUIConfigure setClLogoImage:[self getImgPath:configure[@"authBG"]]];
     }
     if (configure[@"logoWidth"]) {
         [baseUIConfigure setClLogoWidth: configure[@"logoWidth"]];
@@ -150,8 +157,9 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     if (configure[@"navBarHidden"]) {
         [baseUIConfigure setCl_navigation_navigationBarHidden: configure[@"navBarHidden"]];
     }
-    if (configure[@"navBarBG"]) {
-        [baseUIConfigure setCl_navigation_backgroundImage:configure[@"navBarBG"]];
+    if (configure[@"authBG"]) {
+        
+        [baseUIConfigure setCl_navigation_backgroundImage:[self getImgPath:configure[@"authBG"]]];
     }
     if (configure[@"navBarTintColor"]) {
         [baseUIConfigure setCl_navigation_tintColor:[self colorWithHexString:configure[@"navBarTintColor"] alpha:1]];
@@ -160,7 +168,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setCl_navigation_backBtnHidden: configure[@"navBarBackBtnHidden"]];
     }
     if (configure[@"navBarBackBtnImg"]) {
-        [baseUIConfigure setCl_navigation_backBtnImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:configure[@"navBarBackBtnImg"]]]];
+        [baseUIConfigure setCl_navigation_backBtnImage:[self getImgPath:configure[@"authBG"]]];
     }
     if (configure[@"navBarBottomLineHidden"]) {
         [baseUIConfigure setCl_navigation_bottomLineHidden:configure[@"navBarBottomLineHidden"]];
@@ -219,16 +227,126 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setClLoginBtnBorderWidth:configure[@"loginBorderWidth"]];
     }
     if (configure[@"loginBGImg"]) {
-        [baseUIConfigure setClLoginBtnNormalBgImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:configure[@"loginBGImg"]]]];
+        [baseUIConfigure setClLoginBtnNormalBgImage: [self getImgPath:configure[@"authBG"]]];
     }
     if (configure[@"loginRadius"]) {
         [baseUIConfigure setClLoginBtnCornerRadius:configure[@"loginRadius"]];
     }
     
-    //
+    //sloganTextColor
+    if (configure[@"sloganTextSize"]) {
+        [baseUIConfigure setClSloganTextFont:[UIFont systemFontOfSize:[configure[@"sloganTextSize"] floatValue]]];
+    }
+    if (configure[@"sloganTextColor"]) {
+        [baseUIConfigure setClSloganTextColor:[self colorWithHexString:configure[@"sloganTextColor"] alpha:1]];
+    }
+    //sloganOffsetX
+    if (configure[@"sloganHidden"]) {
+        [baseUIConfigure setClSloganTextColor:[UIColor clearColor]];
+    }
+    if (configure[@"sloganOffsetX"]) {
+        [baseUIConfigure setClSloganOffsetX:configure[@"sloganOffsetX"]];
+    }
+    if (configure[@"sloganOffsetY"]) {
+        [baseUIConfigure setClSloganOffsetY:configure[@"sloganOffsetY"]];
+    }
     
+    if (configure[@"sloganOffsetY"]) {
+        [baseUIConfigure setClAppPrivacyFirst:@[]];
+    }
+   
+    if (configure[@"appPrivacyOne"]) {
+        // name,url
+        NSString *oneStr = [NSString stringWithFormat:@"%@", configure[@"appPrivacyOne"]];
+        NSArray *ones = [oneStr componentsSeparatedByString:@","];
+        if (ones != nil) {
+            baseUIConfigure.clAppPrivacyFirst = ones;
+        }
+    }
+    if (configure[@"appPrivacyTwo"]) {
+        // name,url
+        NSString *oneStr = [NSString stringWithFormat:@"%@", configure[@"appPrivacyTwo"]];
+        NSArray *ones = [oneStr componentsSeparatedByString:@","];
+        if (ones != nil) {
+            baseUIConfigure.clAppPrivacySecond = ones;
+        }
+    }
+    if (configure[@"appPrivacyColor"]) {
+        // name,url
+        NSString *colorStr = [NSString stringWithFormat:@"%@", configure[@"appPrivacyColor"]];
+        NSArray *colors = [colorStr componentsSeparatedByString:@","];
+        if (colors != nil) {
+            baseUIConfigure.clAppPrivacyColor = colors;
+        }
+    }
+    if (configure[@"privacyOffsetY"]) {
+        baseUIConfigure.clAppPrivacyOffsetY = configure[@"privacyOffsetY"];
+    }
+    if (configure[@"privacyState"]) {
+        baseUIConfigure.clCheckBoxValue = configure[@"privacyState"];
+    }
+    if (configure[@"checkedImgPath"]) {
+        baseUIConfigure.clCheckBoxCheckedImage = [self getImgPath:configure[@"checkedImgPath"]];
+    }
+    if (configure[@"uncheckedImgPath"]) {
+        baseUIConfigure.clCheckBoxUncheckedImage = [self getImgPath:configure[@"uncheckedImgPath"]];
+    }
+    if (configure[@"checkBoxHidden"]) {
+        baseUIConfigure.clCheckBoxHidden = configure[@"checkBoxHidden"];
+    }
+    CGFloat screenScale = [UIScreen mainScreen].bounds.size.width/375.0;
+    CGSize screen = UIScreen.mainScreen.bounds.size;
+    baseUIConfigure.customAreaView = ^(UIView * _Nonnull customAreaView) {
+        //customAreaView为导航条以下的全屏 375*667比例系数适配 默认375*667下一键登录button底部y约为 270
+        if(![configure[@"otherLoginHidden"] boolValue]) {
+            NSString *otherTxt = configure[@"otherLoginTxt"] != nil ? configure[@"otherLoginTxt"] : @"其他登录方式";
+            UIFont *font = configure[@"otherLoginFontSize"] != nil ? [UIFont systemFontOfSize:[configure[@"otherLoginFontSize"] floatValue]] : [UIFont systemFontOfSize:12];
+            UIColor *color = configure[@"otherLoginColor"] != nil ? [self colorWithHexString:configure[@"otherLoginColor"] alpha:1.0] : [UIColor whiteColor];
+            
+            CGSize titleSize = [otherTxt sizeWithAttributes:@{NSFontAttributeName: font}];
+            UIButton *button = [[UIButton alloc] init];
+            if (configure[@"otherLoginBGColor"]) {
+                [button setBackgroundColor:[self colorWithHexString:configure[@"otherLoginBGColor"] alpha:1]];
+            }
+            [button setTitle:otherTxt forState:(UIControlStateNormal)];
+            [button setTintColor:[UIColor whiteColor]];
+            button.titleLabel.font = font;
+            [button setTitleColor:color forState:UIControlStateNormal];
+            [customAreaView addSubview:button];
+            [button addTarget:self action:@selector(setOtherClick:) forControlEvents:UIControlStateNormal];
+            button.tag = 0;
+            button.frame = CGRectMake(0.5 * (screen.width - titleSize.width), 450*screenScale, screen.width, screen.height);
+        }
+        if (![configure[@"rightBtnHidden"] boolValue]) {
+            UIButton *button = [[UIButton alloc] init];
+            if (configure[@"rightBtnBG"]) {
+                [button setImage:[self getImgPath:configure[@"rightBtnBG"]] forState:UIControlStateNormal];
+            }
+            CGFloat width = configure[@"rightBtnWidth"] != nil ? [configure[@"rightBtnWidth"] floatValue] : 40;
+            CGFloat height = configure[@"rightBtnHeight"] != nil ? [configure[@"rightBtnHeight"] floatValue] : 40;
+            button.contentMode = UIViewContentModeScaleToFill;
+            button.frame = CGRectMake(screen.width - width - 20, 30, width, height);
+            [button addTarget:self action:@selector(setOtherClick) forControlEvents:UIControlStateNormal];
+            button.tag = 1;
+            [customAreaView addSubview:button];
+        }
+        
+    };
+    //otherLoginHidden
     
     return baseUIConfigure;
+}
+
+-(void)setOtherClick:(UIButton *)btn {
+    long code = btn.tag;
+    NSString *message = btn.tag == 0 ? @"其他方式登录" : @"右上角点击";
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    [dict setObject:@(code) forKey:@"code"];
+    [dict setObject:message forKey:@"message"];
+    if (self.successBlock != nil) {
+        self.successBlock(dict);
+    }
+    
 }
 
 - (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha {
@@ -253,6 +371,23 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     } else {
         return [UIColor clearColor];
     }
+}
+
+-(UIImage*)getImgPath:(NSString*)path {
+    
+    NSData *data = nil;
+    UIImage *img = nil;
+    if ([path rangeOfString:@"http"].location == 0) {
+        data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:path]];
+    } else {
+        data = [[NSData alloc] initWithContentsOfFile:path];
+    }
+    if (data == nil) {
+        img = [UIImage imageNamed:path];
+    } else {
+        img = [UIImage imageWithData:data];
+    }
+    return img;
 }
 
 #pragma -mark 获取当前的ViewController
