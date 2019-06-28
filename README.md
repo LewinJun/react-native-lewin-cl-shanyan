@@ -103,7 +103,7 @@ const login = async ()=> {
 > 参考API注释说明
 ```javascrip
 /**
-   * img logo sdk暂时只支持 android drawable,不能放在RN JS目录
+   * img logo sdk暂时只支持 android drawable,不能放在RN JS目录  ios 图片放到 Assets.xcassets 图片名称和安卓最好一致
    * @param {*} param0 logo 图片require  phone 电话号码  login 登录按钮  navBar 头部导航栏 otherLogin 其他方式登录
    * appPrivacyOne/appPrivacyTwo "name,url" 组合
    * privacyState true false 是否选中 协议勾选框 默认为true
