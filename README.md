@@ -8,7 +8,7 @@
 ## 添加库 
 > yarn add react-native-lewin-cl-shanyan
 
-> link react-native link react-native-lewin-cl-shanyan
+> react-native link react-native-lewin-cl-shanyan
 ## android配置
 1. 权限配置AndroidManifest.xml文件
 
