@@ -27,10 +27,31 @@ RCT_EXPORT_METHOD(initWithAppId:(NSString*)AppId AppKey:(NSString*)AppKey timeOu
                 if (completeResult.error != nil) {
                     failure(completeResult.error);
                 } else {
+                    // 这里曲线救国一下，调试过程发现  第一次预取号会失败(也可能 会调用到第三次才成功) 和官网开发人员讨论半天  没找到原因，这里先留着 这些煞笔代码
+                    [CLShanYanSDKManager preGetPhonenumber:^(CLCompleteResult * _Nonnull completeResult) {
+                        NSLog(@"%@", completeResult.message);
+                        if (completeResult.error != nil) {
+                            [CLShanYanSDKManager preGetPhonenumber:^(CLCompleteResult * _Nonnull completeResult) {
+                                NSLog(@"%@", completeResult.message);
+                                if (completeResult.error != nil) {
+                                    [CLShanYanSDKManager preGetPhonenumber:^(CLCompleteResult * _Nonnull completeResult) {
+                                        NSLog(@"%@", completeResult.message);
+                                        if (completeResult.error != nil) {
+                                            [CLShanYanSDKManager preGetPhonenumber:^(CLCompleteResult * _Nonnull completeResult) {
+                                                NSLog(@"%@", completeResult.message);
+                                                if (completeResult.error != nil) {
+                                                }
+                                            }];
+                                        }
+                                    }];
+                                }
+                            }];
+                        }
+                    }];
                     NSMutableDictionary *dict = [NSMutableDictionary new];
                     [dict setObject:@(completeResult.code) forKey:@"code"];
                     [dict setObject:completeResult.message forKey:@"message"];
-                    [dict setObject:completeResult.data forKey:@"data"];
+                    [dict setObject:@"" forKey:@"data"];
                     [dict setObject:@(completeResult.authPagePresented) forKey:@"authPagePresented"];
                     success(dict);
                 }
@@ -50,6 +71,7 @@ RCT_EXPORT_METHOD(initWithAppId:(NSString*)AppId AppKey:(NSString*)AppKey timeOu
 RCT_EXPORT_METHOD(preGetPhonenumber:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
     dispatch_sync(dispatch_get_main_queue(), ^{
         @try{
+            
             [CLShanYanSDKManager preGetPhonenumber:^(CLCompleteResult * _Nonnull completeResult) {
                 if (completeResult.error != nil) {
                     failure(completeResult.error);
@@ -74,13 +96,13 @@ RCT_EXPORT_METHOD(preGetPhonenumber:(RCTPromiseResolveBlock)success failure:(RCT
     });
 }
 
-RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure success:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
+RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure timeOut:(NSTimeInterval)timeOut success:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
     self.successBlock = success;
     dispatch_sync(dispatch_get_main_queue(), ^{
         @try{
             CLUIConfigure * baseUIConfigure = [self getConfig:configure];
-            
-            [CLShanYanSDKManager quickAuthLoginWithConfigure:baseUIConfigure timeOut:10 complete:^(CLCompleteResult * _Nonnull completeResult) {
+            NSTimeInterval timeO = timeOut * 1000;
+            [CLShanYanSDKManager quickAuthLoginWithConfigure:baseUIConfigure timeOut:timeO complete:^(CLCompleteResult * _Nonnull completeResult) {
                 if (completeResult.error != nil) {
                     failure(completeResult.error);
                 } else {
@@ -135,7 +157,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     baseUIConfigure.viewController = [RNCLShanYanSDK getCurrentViewController];
     // LOGO 相关属性
     if (configure[@"logo"]) {
-        [baseUIConfigure setClLogoImage:[self getImgPath:configure[@"authBG"]]];
+        [baseUIConfigure setClLogoImage:[self getImgPath:configure[@"logo"]]];
     }
     if (configure[@"logoWidth"]) {
         [baseUIConfigure setClLogoWidth: configure[@"logoWidth"]];
@@ -158,8 +180,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setCl_navigation_navigationBarHidden: configure[@"navBarHidden"]];
     }
     if (configure[@"authBG"]) {
-        
-        [baseUIConfigure setCl_navigation_backgroundImage:[self getImgPath:configure[@"authBG"]]];
+        [baseUIConfigure setClBackgroundImg:[self getImgPath:configure[@"authBG"]]];
     }
     if (configure[@"navBarTintColor"]) {
         [baseUIConfigure setCl_navigation_tintColor:[self colorWithHexString:configure[@"navBarTintColor"] alpha:1]];
@@ -168,7 +189,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setCl_navigation_backBtnHidden: configure[@"navBarBackBtnHidden"]];
     }
     if (configure[@"navBarBackBtnImg"]) {
-        [baseUIConfigure setCl_navigation_backBtnImage:[self getImgPath:configure[@"authBG"]]];
+        [baseUIConfigure setCl_navigation_backBtnImage:[self getImgPath:configure[@"navBarBackBtnImg"]]];
     }
     if (configure[@"navBarBottomLineHidden"]) {
         [baseUIConfigure setCl_navigation_bottomLineHidden:configure[@"navBarBottomLineHidden"]];
@@ -227,7 +248,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setClLoginBtnBorderWidth:configure[@"loginBorderWidth"]];
     }
     if (configure[@"loginBGImg"]) {
-        [baseUIConfigure setClLoginBtnNormalBgImage: [self getImgPath:configure[@"authBG"]]];
+        [baseUIConfigure setClLoginBtnNormalBgImage: [self getImgPath:configure[@"loginBGImg"]]];
     }
     if (configure[@"loginRadius"]) {
         [baseUIConfigure setClLoginBtnCornerRadius:configure[@"loginRadius"]];
@@ -294,7 +315,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     if (configure[@"checkBoxHidden"]) {
         baseUIConfigure.clCheckBoxHidden = configure[@"checkBoxHidden"];
     }
-    CGFloat screenScale = [UIScreen mainScreen].bounds.size.width/375.0;
+//    CGFloat screenScale = [UIScreen mainScreen].bounds.size.height/667;
     CGSize screen = UIScreen.mainScreen.bounds.size;
     baseUIConfigure.customAreaView = ^(UIView * _Nonnull customAreaView) {
         //customAreaView为导航条以下的全屏 375*667比例系数适配 默认375*667下一键登录button底部y约为 270
@@ -312,21 +333,24 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
             [button setTintColor:[UIColor whiteColor]];
             button.titleLabel.font = font;
             [button setTitleColor:color forState:UIControlStateNormal];
-            [customAreaView addSubview:button];
-            [button addTarget:self action:@selector(setOtherClick:) forControlEvents:UIControlStateNormal];
+            
+            [button addTarget:self action:@selector(setOtherClick:) forControlEvents:UIControlEventTouchUpInside];
             button.tag = 0;
-            button.frame = CGRectMake(0.5 * (screen.width - titleSize.width), 450*screenScale, screen.width, screen.height);
+            button.frame = CGRectMake(0.5 * (screen.width - titleSize.width), 270 + 40, titleSize.width, 40);
+            [customAreaView addSubview:button];
         }
         if (![configure[@"rightBtnHidden"] boolValue]) {
             UIButton *button = [[UIButton alloc] init];
+            UIImage *img = [self getImgPath:configure[@"rightBtnBG"]];
             if (configure[@"rightBtnBG"]) {
-                [button setImage:[self getImgPath:configure[@"rightBtnBG"]] forState:UIControlStateNormal];
+                [button setImage:img forState:UIControlStateNormal];
             }
-            CGFloat width = configure[@"rightBtnWidth"] != nil ? [configure[@"rightBtnWidth"] floatValue] : 40;
-            CGFloat height = configure[@"rightBtnHeight"] != nil ? [configure[@"rightBtnHeight"] floatValue] : 40;
+            
+            CGFloat width = configure[@"rightBtnWidth"] != nil ? [configure[@"rightBtnWidth"] floatValue] : img.size.width;
+            CGFloat height = configure[@"rightBtnHeight"] != nil ? [configure[@"rightBtnHeight"] floatValue] : img.size.height;
             button.contentMode = UIViewContentModeScaleToFill;
             button.frame = CGRectMake(screen.width - width - 20, 30, width, height);
-            [button addTarget:self action:@selector(setOtherClick) forControlEvents:UIControlStateNormal];
+            [button addTarget:self action:@selector(setOtherClick:) forControlEvents:UIControlEventTouchUpInside];
             button.tag = 1;
             [customAreaView addSubview:button];
         }
@@ -395,63 +419,34 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
  * @brief 获取当前的ViewController
  *
  */
-+ (UINavigationController *)getCurrentNavigationController
++ (UIViewController *)getCurrentViewController
 {
-    UINavigationController *nvc = [[self class] __expectedVisibleNavigationController];
-    return nvc;
-}
-
-+(UIViewController*_Nonnull)getCurrentViewController{
-    return [[[self class] getCurrentNavigationController] visibleViewController];
-}
-
-+ (UINavigationController *)__expectedVisibleNavigationController
-{
-    UINavigationController *nvc = [[self class] expectedVisibleNavigationController];
-    if ([nvc isKindOfClass:[UINavigationController class]])
-    {
-        return nvc;
+    UIViewController *result = nil;
+    // 获取默认的window
+    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
+    // app默认windowLevel是UIWindowLevelNormal，如果不是，找到它。
+    if (window.windowLevel != UIWindowLevelNormal) {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows) {
+            if (tmpWin.windowLevel == UIWindowLevelNormal) {
+                window = tmpWin;
+                break;
+            }
+        }
     }
-    else
-    {
-        UIViewController *vc = [self __visibleViewControllerWithRootViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
-        UINavigationController *nvc = (UINavigationController *)([vc isKindOfClass:[UINavigationController class]] ? vc : vc.navigationController);
-        return nvc;
+    
+    // 获取window的rootViewController
+    result = window.rootViewController;
+    while (result.presentedViewController) {
+        result = result.presentedViewController;
     }
-}
-
-+ (UIViewController *)__visibleViewController
-{
-    UIViewController *vc = [self __visibleViewControllerWithRootViewController:[UIApplication sharedApplication].delegate.window.rootViewController];
-    return vc;
-}
-
-+ (UIViewController*)__visibleViewControllerWithRootViewController:(UIViewController*)rootViewController
-{
-    if ([rootViewController isKindOfClass:[UITabBarController class]])
-    {
-        UITabBarController *tbc = (UITabBarController*)rootViewController;
-        return [self __visibleViewControllerWithRootViewController:tbc.selectedViewController];
+    if ([result isKindOfClass:[UITabBarController class]]) {
+        result = [(UITabBarController *)result selectedViewController];
     }
-    else if ([rootViewController isKindOfClass:[UINavigationController class]])
-    {
-        UINavigationController *nvc = (UINavigationController*)rootViewController;
-        return [self __visibleViewControllerWithRootViewController:nvc.visibleViewController];
+    if ([result isKindOfClass:[UINavigationController class]]) {
+        result = [(UINavigationController *)result visibleViewController];
     }
-    else if (rootViewController.presentedViewController)
-    {
-        UIViewController *presentedVC = rootViewController.presentedViewController;
-        return [self __visibleViewControllerWithRootViewController:presentedVC];
-    }
-    else
-    {
-        return rootViewController;
-    }
-}
-
-+ (UINavigationController *)expectedVisibleNavigationController
-{
-    return (UINavigationController *)@"miss";
+    return result;
 }
 
 @end
