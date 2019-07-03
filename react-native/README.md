@@ -80,6 +80,7 @@ const login = async ()=> {
         // res {code, message, data}
         // code 等于0 是其他方式  1  是右上角关闭点击
         // 成功拿到就关闭一键登录
+        // data 安卓为字符串  自行 JSON.parse
         const res1 = await RNCLShanYanSDK.closeLogin();
         console.log(res1);
       }catch(e){

@@ -155,6 +155,9 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
 -(CLUIConfigure*)getConfig:(NSDictionary*)configure {
     CLUIConfigure * baseUIConfigure = [CLUIConfigure new];
     baseUIConfigure.viewController = [RNCLShanYanSDK getCurrentViewController];
+    if (configure[@"manualDismiss"]) {
+        [baseUIConfigure setManualDismiss:configure[@"manualDismiss"]];
+    }
     // LOGO 相关属性
     if (configure[@"logo"]) {
         [baseUIConfigure setClLogoImage:[self getImgPath:configure[@"logo"]]];

@@ -59,9 +59,10 @@ export default class RNCLShanYanSDKUtil  {
    * @param {*} param0 logo 图片require  phone 电话号码  login 登录按钮  navBar 头部导航栏 otherLogin 其他方式登录
    * appPrivacyOne/appPrivacyTwo "name,url" 组合
    * privacyState true false 是否选中 协议勾选框 默认为true
+   * manualDismiss 是否手动管理销毁授权页  默认为false
    * @param {*} timeOut 超时时间
    */
-  static quickAuthLogin(params = {logo: null, logoWidth : null, logoHeight : null, 
+  static quickAuthLogin(params = {manualDismiss: false, logo: null, logoWidth : null, logoHeight : null, 
     logoOffX : null, logoOffY : null, logoHidden : null, 
     phoneFontSize : null, phoneColor : null, phoneWidth : null, phoneOffX : null, 
     phoneOffY : null, loginTxt : null, loginTxtColor : null, loginFontSize : null, loginWidth : null, 

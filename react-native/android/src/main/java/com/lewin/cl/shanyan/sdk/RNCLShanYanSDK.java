@@ -158,7 +158,12 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
     private void login(ReadableMap configure, Integer timeout, final Promise promise) {
         try{
             this.setUIConfig(configure, promise);
-            OneKeyLoginManager.getInstance().openLoginAuth(false, timeout, new OpenLoginAuthListener() {
+            // 是否手动管理销毁授权页
+            boolean manualDismiss = false;
+            if (configure.hasKey("manualDismiss") && !configure.isNull("manualDismiss")) {
+                manualDismiss = configure.getBoolean("manualDismiss");
+            }
+            OneKeyLoginManager.getInstance().openLoginAuth(manualDismiss, timeout, new OpenLoginAuthListener() {
                 @Override
                 public void getOpenLoginAuthStatus(int code, String result) {
                     if (code != 1000) {
