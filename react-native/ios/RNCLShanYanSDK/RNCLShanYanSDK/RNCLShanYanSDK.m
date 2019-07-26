@@ -10,6 +10,8 @@
 #import "RNCLShanYanSDK.h"
 #import <CL_ShanYanSDK/CL_ShanYanSDK.h>
 #define COLOR_HEX(hexValue,alphaValue) [UIColor colorWithRed:((float)((hexValue & 0xFF0000) >> 16))/255.0 green:((float)((hexValue & 0xFF00) >> 8))/255.0 blue:((float)(hexValue & 0xFF))/255.0 alpha:alphaValue]
+#define SCREEN_HEIGHT                                 ([UIScreen mainScreen].bounds.size.height)
+
 
 @interface RNCLShanYanSDK ()
 
@@ -23,7 +25,8 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(initWithAppId:(NSString*)AppId AppKey:(NSString*)AppKey timeOut:(NSTimeInterval)timeOut success:(RCTPromiseResolveBlock)success failure:(RCTResponseErrorBlock)failure){
     dispatch_sync(dispatch_get_main_queue(), ^{
         @try{
-            [CLShanYanSDKManager initWithAppId:AppId AppKey:AppKey timeOut:timeOut complete:^(CLCompleteResult * _Nonnull completeResult) {
+  
+            [CLShanYanSDKManager initWithAppId:AppId AppKey:AppKey complete:^(CLCompleteResult * _Nonnull completeResult) {
                 if (completeResult.error != nil) {
                     failure(completeResult.error);
                 } else {
@@ -102,7 +105,7 @@ RCT_EXPORT_METHOD(quickAuthLogin:(NSDictionary*)configure timeOut:(NSTimeInterva
         @try{
             CLUIConfigure * baseUIConfigure = [self getConfig:configure];
             NSTimeInterval timeO = timeOut * 1000;
-            [CLShanYanSDKManager quickAuthLoginWithConfigure:baseUIConfigure timeOut:timeO complete:^(CLCompleteResult * _Nonnull completeResult) {
+            [CLShanYanSDKManager quickAuthLoginWithConfigure:baseUIConfigure complete:^(CLCompleteResult * _Nonnull completeResult) {
                 if (completeResult.error != nil) {
                     failure(completeResult.error);
                 } else {
@@ -155,51 +158,49 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
 -(CLUIConfigure*)getConfig:(NSDictionary*)configure {
     CLUIConfigure * baseUIConfigure = [CLUIConfigure new];
     baseUIConfigure.viewController = [RNCLShanYanSDK getCurrentViewController];
-    if (configure[@"manualDismiss"]) {
-        [baseUIConfigure setManualDismiss:configure[@"manualDismiss"]];
+    CGFloat screenScale = [UIScreen mainScreen].bounds.size.width/375.0;
+    if (screenScale > 1) {
+        screenScale = 1;
     }
+    //布局-竖屏
+    CLOrientationLayOut * clOrientationLayOutPortrait = [CLOrientationLayOut new];
     // LOGO 相关属性
     if (configure[@"logo"]) {
         [baseUIConfigure setClLogoImage:[self getImgPath:configure[@"logo"]]];
     }
     if (configure[@"logoWidth"]) {
-        [baseUIConfigure setClLogoWidth: configure[@"logoWidth"]];
+        [clOrientationLayOutPortrait setClLayoutLogoWidth: configure[@"logoWidth"]];
     }
     if (configure[@"logoHeight"]) {
-        [baseUIConfigure setClLogoHeight: configure[@"logoHeight"]];
+        [clOrientationLayOutPortrait setClLayoutLogoHeight: configure[@"logoHeight"]];
     }
-    if (configure[@"logoOffX"]) {
-        [baseUIConfigure setClLogoOffsetX: configure[@"logoOffX"]];
-    }
-    if (configure[@"logoOffY"]) {
-        [baseUIConfigure setClLogoOffsetY: configure[@"logoOffY"]];
-    }
+    
     if (configure[@"logoHidden"]) {
         [baseUIConfigure setClLogoHiden:configure[@"logoHidden"]];
     }
     
     // 头部导航栏相关属性
     if (configure[@"navBarHidden"]) {
-        [baseUIConfigure setCl_navigation_navigationBarHidden: configure[@"navBarHidden"]];
+        [baseUIConfigure setClNavigationBarHidden: configure[@"navBarHidden"]];
     }
     if (configure[@"authBG"]) {
         [baseUIConfigure setClBackgroundImg:[self getImgPath:configure[@"authBG"]]];
     }
-    if (configure[@"navBarTintColor"]) {
-        [baseUIConfigure setCl_navigation_tintColor:[self colorWithHexString:configure[@"navBarTintColor"] alpha:1]];
-    }
-    if (configure[@"navBarBackBtnHidden"]) {
-        [baseUIConfigure setCl_navigation_backBtnHidden: configure[@"navBarBackBtnHidden"]];
-    }
-    if (configure[@"navBarBackBtnImg"]) {
-        [baseUIConfigure setCl_navigation_backBtnImage:[self getImgPath:configure[@"navBarBackBtnImg"]]];
-    }
-    if (configure[@"navBarBottomLineHidden"]) {
-        [baseUIConfigure setCl_navigation_bottomLineHidden:configure[@"navBarBottomLineHidden"]];
-    }
-    if (configure[@"navBarBGTransparent"]) {
-        [baseUIConfigure setCl_navigation_backgroundClear:configure[@"navBarBGTransparent"]];
-    }
+//    if (configure[@"navBarTintColor"]) {
+//        [baseUIConfigure setCl_navigation_tintColor:[self colorWithHexString:configure[@"navBarTintColor"] alpha:1]];
+//    }
+//    if (configure[@"navBarBackBtnHidden"]) {
+//        [baseUIConfigure setCl_navigation_backBtnHidden: configure[@"navBarBackBtnHidden"]];
+//    }
+//    if (configure[@"navBarBackBtnImg"]) {
+//        [baseUIConfigure setCl_navigation_backBtnImage:[self getImgPath:configure[@"navBarBackBtnImg"]]];
+//    }
+//    if (configure[@"navBarBottomLineHidden"]) {
+//        [baseUIConfigure setCl_navigation_bottomLineHidden:configure[@"navBarBottomLineHidden"]];
+//    }
+//    if (configure[@"navBarBGTransparent"]) {
+//        [baseUIConfigure setCl_navigation_backgroundClear:configure[@"navBarBGTransparent"]];
+//    }
     
     // .... 其他待提出
     // 手机号码
@@ -210,16 +211,16 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setClPhoneNumberColor:[self colorWithHexString:configure[@"phoneColor"] alpha:1]];
     }
     if (configure[@"phoneWidth"]) {
-        [baseUIConfigure setClPhoneNumberWidth:configure[@"phoneWidth"]];
+        [clOrientationLayOutPortrait setClLayoutPhoneWidth:configure[@"phoneWidth"]];
     }
     if (configure[@"phoneHeight"]) {
-        [baseUIConfigure setClPhoneNumberHeight:configure[@"phoneHeight"]];
+        [clOrientationLayOutPortrait setClLayoutPhoneHeight:configure[@"phoneHeight"]];
     }
     if (configure[@"phoneOffX"]) {
-        [baseUIConfigure setClPhoneNumberOffsetX:configure[@"phoneOffX"]];
+        [clOrientationLayOutPortrait setClLayoutPhoneLeft:configure[@"phoneOffX"]];
     }
     if (configure[@"phoneOffY"]) {
-        [baseUIConfigure setClPhoneNumberOffsetY:configure[@"phoneOffY"]];
+        [clOrientationLayOutPortrait setClLayoutPhoneTop:configure[@"phoneOffY"]];
     }
     
     // 登录按钮
@@ -236,10 +237,10 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setClLoginBtnText:configure[@"loginTxt"]];
     }
     if (configure[@"loginWidth"]) {
-        [baseUIConfigure setClLoginBtnWidth:configure[@"loginWidth"]];
+        [clOrientationLayOutPortrait setClLayoutLogoWidth:configure[@"loginWidth"]];
     }
     if (configure[@"loginHeight"]) {
-        [baseUIConfigure setClLoginBtnHeight:configure[@"loginHeight"]];
+        [clOrientationLayOutPortrait setClLayoutLogoHeight:configure[@"loginHeight"]];
     }
     if (configure[@"loginBGColor"]) {
         [baseUIConfigure setClLoginBtnBgColor:[self colorWithHexString:configure[@"loginBGColor"] alpha:1]];
@@ -269,10 +270,10 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         [baseUIConfigure setClSloganTextColor:[UIColor clearColor]];
     }
     if (configure[@"sloganOffsetX"]) {
-        [baseUIConfigure setClSloganOffsetX:configure[@"sloganOffsetX"]];
+        [clOrientationLayOutPortrait setClLayoutSloganLeft:configure[@"sloganOffsetX"]];
     }
     if (configure[@"sloganOffsetY"]) {
-        [baseUIConfigure setClSloganOffsetY:configure[@"sloganOffsetY"]];
+        [clOrientationLayOutPortrait setClLayoutSloganTop:configure[@"sloganOffsetY"]];
     }
     
     if (configure[@"sloganOffsetY"]) {
@@ -304,7 +305,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         }
     }
     if (configure[@"privacyOffsetY"]) {
-        baseUIConfigure.clAppPrivacyOffsetY = configure[@"privacyOffsetY"];
+        clOrientationLayOutPortrait.clLayoutAppPrivacyTop = configure[@"privacyOffsetY"];
     }
     if (configure[@"privacyState"]) {
         baseUIConfigure.clCheckBoxValue = configure[@"privacyState"];
@@ -318,6 +319,37 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
     if (configure[@"checkBoxHidden"]) {
         baseUIConfigure.clCheckBoxHidden = configure[@"checkBoxHidden"];
     }
+    
+    clOrientationLayOutPortrait.clLayoutPhoneCenterY = @(0*screenScale);
+    clOrientationLayOutPortrait.clLayoutPhoneLeft = @(50*screenScale);
+    clOrientationLayOutPortrait.clLayoutPhoneRight = @(-50*screenScale);
+    clOrientationLayOutPortrait.clLayoutPhoneHeight = @(20*screenScale);
+    //
+//    clOrientationLayOutPortrait.clLayoutLogoWidth = @(100*screenScale);
+//    clOrientationLayOutPortrait.clLayoutLogoHeight = @(100*screenScale);
+    clOrientationLayOutPortrait.clLayoutLogoCenterX = @(-100 * screenScale);
+    clOrientationLayOutPortrait.clLayoutLogoCenterY = @(-SCREEN_HEIGHT*0.35);
+    if (configure[@"logoOffX"]) {
+        clOrientationLayOutPortrait.clLayoutLogoCenterX = @(clOrientationLayOutPortrait.clLayoutLogoCenterX.floatValue + [configure[@"logoOffX"] floatValue]);
+    }
+    if (configure[@"logoOffY"]) {
+        clOrientationLayOutPortrait.clLayoutLogoCenterY = @(clOrientationLayOutPortrait.clLayoutLogoCenterY.floatValue + [configure[@"logoOffY"]  floatValue]);
+    }
+    
+    clOrientationLayOutPortrait.clLayoutLoginBtnCenterY= @(clOrientationLayOutPortrait.clLayoutPhoneCenterY.floatValue + clOrientationLayOutPortrait.clLayoutPhoneHeight.floatValue*0.5*screenScale + 20*screenScale + 15*screenScale);
+    clOrientationLayOutPortrait.clLayoutLoginBtnHeight = @(30*screenScale);
+    clOrientationLayOutPortrait.clLayoutLoginBtnLeft = @(70*screenScale);
+    clOrientationLayOutPortrait.clLayoutLoginBtnRight = @(-70*screenScale);
+    
+    clOrientationLayOutPortrait.clLayoutAppPrivacyLeft = @(40*screenScale);
+    clOrientationLayOutPortrait.clLayoutAppPrivacyRight = @(-40*screenScale);
+    clOrientationLayOutPortrait.clLayoutAppPrivacyBottom = @(0*screenScale);
+    clOrientationLayOutPortrait.clLayoutAppPrivacyHeight = @(45*screenScale);
+    
+    clOrientationLayOutPortrait.clLayoutSloganLeft = @(0);
+    clOrientationLayOutPortrait.clLayoutSloganRight = @(0);
+    clOrientationLayOutPortrait.clLayoutSloganHeight = @(15*screenScale);
+    clOrientationLayOutPortrait.clLayoutSloganBottom = @(clOrientationLayOutPortrait.clLayoutAppPrivacyBottom.floatValue - clOrientationLayOutPortrait.clLayoutAppPrivacyHeight.floatValue);
 //    CGFloat screenScale = [UIScreen mainScreen].bounds.size.height/667;
     CGSize screen = UIScreen.mainScreen.bounds.size;
     baseUIConfigure.customAreaView = ^(UIView * _Nonnull customAreaView) {
@@ -339,7 +371,7 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
             
             [button addTarget:self action:@selector(setOtherClick:) forControlEvents:UIControlEventTouchUpInside];
             button.tag = 0;
-            button.frame = CGRectMake(0.5 * (screen.width - titleSize.width), 270 + 40, titleSize.width, 40);
+            button.frame = CGRectMake(0.5 * (screen.width - titleSize.width),  SCREEN_HEIGHT / 2.0 + clOrientationLayOutPortrait.clLayoutLoginBtnCenterY.floatValue + 20, titleSize.width, 40);
             [customAreaView addSubview:button];
         }
         if (![configure[@"rightBtnHidden"] boolValue]) {
@@ -359,8 +391,9 @@ RCT_EXPORT_METHOD(closeLogin:(RCTPromiseResolveBlock)success failure:(RCTRespons
         }
         
     };
+   
     //otherLoginHidden
-    
+    baseUIConfigure.clOrientationLayOutPortrait = clOrientationLayOutPortrait;
     return baseUIConfigure;
 }
 
