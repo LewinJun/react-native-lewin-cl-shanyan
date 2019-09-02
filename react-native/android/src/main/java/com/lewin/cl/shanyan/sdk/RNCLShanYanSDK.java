@@ -85,27 +85,31 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
     }
 
     private void init(final String AppId, final String AppKey, Integer timeOut, final Promise promise) {
-        reactContext.getCurrentActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                OneKeyLoginManager.getInstance().init(reactContext, AppId, AppKey, new InitListener() {
-                    @Override
-                    public void getInitStatus(int code, String result) {
-                        Log.e("VVV", "初始化code=" + code + "result==" + result);
-                        if (code == 1022) {
-                            WritableMap map = Arguments.createMap();
-                            map.putInt("code", code);
-                            map.putString("message", result);
-                            //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                            promise.resolve(map);
-                        } else {
-                            promise.reject(code + "", result);
-                        }
+        try{
+            reactContext.getCurrentActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    OneKeyLoginManager.getInstance().init(reactContext, AppId, AppKey, new InitListener() {
+                        @Override
+                        public void getInitStatus(int code, String result) {
+                            Log.e("VVV", "初始化code=" + code + "result==" + result);
+                            if (code == 1022) {
+                                WritableMap map = Arguments.createMap();
+                                map.putInt("code", code);
+                                map.putString("message", result);
+                                //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                                promise.resolve(map);
+                            } else {
+                                promise.reject(code + "", result);
+                            }
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            promise.reject("500", e.getLocalizedMessage());
+        }
 
     }
 
