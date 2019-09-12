@@ -463,8 +463,8 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
         }catch (Exception e) {
             try {
                 promise.reject("500",  e.getLocalizedMessage());
-            }catch (Exception e) {
-                e.printStackTrace();
+            }catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
