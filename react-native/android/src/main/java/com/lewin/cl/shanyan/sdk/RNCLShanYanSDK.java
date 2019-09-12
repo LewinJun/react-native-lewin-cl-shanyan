@@ -93,14 +93,18 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
                         @Override
                         public void getInitStatus(int code, String result) {
                             Log.e("VVV", "初始化code=" + code + "result==" + result);
-                            if (code == 1022) {
-                                WritableMap map = Arguments.createMap();
-                                map.putInt("code", code);
-                                map.putString("message", result);
-                                //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                                promise.resolve(map);
-                            } else {
-                                promise.reject(code + "", result);
+                            try {
+                                if (code == 1022) {
+                                    WritableMap map = Arguments.createMap();
+                                    map.putInt("code", code);
+                                    map.putString("message", result);
+                                    //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                                    promise.resolve(map);
+                                } else {
+                                    promise.reject(code + "", result);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
 
                         }
@@ -108,7 +112,11 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
                 }
             });
         }catch (Exception e){
-            promise.reject("500", e.getLocalizedMessage());
+            try{
+                promise.reject("500", e.getLocalizedMessage());
+            }catch (Exception exx) {
+                exx.printStackTrace();
+            }
         }
 
     }
@@ -141,15 +149,20 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
             @Override
             public void getPhoneInfoStatus(int code, String result) {
                 Log.e("VVV", "初始化code=" + code + "result==" + result);
-                if (code == 1022) {
-                    WritableMap map = Arguments.createMap();
-                    map.putInt("code", code);
-                    map.putString("message", result);
-                    //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                    promise.resolve(map);
-                } else {
-                    promise.reject(code + "", result);
+                try {
+                    if (code == 1022) {
+                        WritableMap map = Arguments.createMap();
+                        map.putInt("code", code);
+                        map.putString("message", result);
+                        //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                        promise.resolve(map);
+                    } else {
+                        promise.reject(code + "", result);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
     }
@@ -170,28 +183,40 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
             OneKeyLoginManager.getInstance().openLoginAuth(manualDismiss, timeout, new OpenLoginAuthListener() {
                 @Override
                 public void getOpenLoginAuthStatus(int code, String result) {
-                    if (code != 1000) {
-                        promise.reject(code + "", result);
+                    try {
+                        if (code != 1000) {
+                            promise.reject(code + "", result);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             }, new OneKeyLoginListener() {
                 @Override
                 public void getOneKeyLoginStatus(int code, String result) {
-                    if (code == 1000) {
-                        WritableMap map = Arguments.createMap();
-                        map.putInt("code", code);
-                        map.putString("message", result);
-                        map.putString("data", result);
-                        //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                        promise.resolve(map);
-                    } else {
-                        promise.reject(code + "", result);
+                    try {
+                        if (code == 1000) {
+                            WritableMap map = Arguments.createMap();
+                            map.putInt("code", code);
+                            map.putString("message", result);
+                            map.putString("data", result);
+                            //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                            promise.resolve(map);
+                        } else {
+                            promise.reject(code + "", result);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             });
 
         }catch (Exception e){
-            promise.reject("500", e.getLocalizedMessage());
+            try{
+                promise.reject("500", e.getLocalizedMessage());
+            }catch (Exception exx) {
+                exx.printStackTrace();
+            }
         }
     }
 
@@ -371,12 +396,17 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
                 uiConfig.addCustomView(otherTV, true, false, new ShanYanCustomInterface() {
                     @Override
                     public void onClick(Context context, View view) {
-                        WritableMap map = Arguments.createMap();
-                        map.putInt("code", 0);
-                        map.putString("message", "其他方式登录");
-                        map.putString("data", "");
-                        //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                        promise.resolve(map);
+                        try {
+                            WritableMap map = Arguments.createMap();
+                            map.putInt("code", 0);
+                            map.putString("message", "其他方式登录");
+                            map.putString("data", "");
+                            //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                            promise.resolve(map);
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
             }
@@ -402,12 +432,17 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
                 uiConfig.addCustomView(close, true, false, new ShanYanCustomInterface() {
                     @Override
                     public void onClick(Context context, View view) {
-                        WritableMap map = Arguments.createMap();
-                        map.putInt("code", 1);
-                        map.putString("message", "右上角点击");
-                        map.putString("data", "");
-                        //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
-                        promise.resolve(map);
+                        try {
+                            WritableMap map = Arguments.createMap();
+                            map.putInt("code", 1);
+                            map.putString("message", "右上角点击");
+                            map.putString("data", "");
+                            //权限判断：调用网络初始化和预取号前需要获取READ_PHONE_STATE权限，否则会返回失败状态码
+                            promise.resolve(map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
             }
@@ -426,7 +461,11 @@ public class RNCLShanYanSDK extends ReactContextBaseJavaModule {
             map.putString("message", "销毁成功");
             promise.resolve(map);
         }catch (Exception e) {
-            promise.reject("500",  e.getLocalizedMessage());
+            try {
+                promise.reject("500",  e.getLocalizedMessage());
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
