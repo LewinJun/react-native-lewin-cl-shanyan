@@ -1,6 +1,6 @@
 {
   "name": "react-native-lewin-cl-shanyan",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "创蓝 253 闪验SDK(v2.2)， 基于官网的SDK封装RN(React Native)版本",
   "main": "index.js",
   "scripts": {
