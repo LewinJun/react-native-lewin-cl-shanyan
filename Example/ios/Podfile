@@ -1,0 +1,6 @@
+platform :ios, '9.0'
+
+target 'Example' do
+    pod 'RNLewinCLShanYan', :path => '../node_modules/react-native-lewin-cl-shanyan'
+
+end

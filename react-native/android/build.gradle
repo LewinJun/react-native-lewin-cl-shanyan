@@ -24,24 +24,22 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion safeExtGet('compileSdkVersion', 28)
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 1
-        versionName computeVersionName()
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        //noinspection OldTargetApi
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
     }
     lintOptions {
         abortOnError false
     }
-    buildTypes {
-        release {
-        }
-    }
 }
-
 repositories {
     mavenCentral()
 
